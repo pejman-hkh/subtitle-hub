@@ -41,7 +41,7 @@ export function ClientMovie({ movie }: any) {
                     <tr key={item?.id} className="bg-gray-800 p-4 rounded-lg shadow-md justify-between items-center hover:bg-gray-700 transition-colors border-b-1 border-white">
                         <td className="text-white text-lg p-4">{item?.title}</td>
                         <td className="p-4 text-white">{item?.lang}</td>
-                        <td className="p-4">{item?.file_name && <a href={process.env.NEXT_PUBLIC_BASE_URL + "files/subtitles/" + item?.file_name} className="text-indigo-400 hover:text-indigo-300">{t('Download')}</a>}{!item?.file_name && <span className="text-white">{t('In Queue')}</span>}</td>
+                        <td className="p-4">{item?.file_name && <a href={process.env.NEXT_PUBLIC_BASE_URL + "files/subtitles/" + item?.file_name} className="text-indigo-400 hover:text-indigo-300">{t('Download')}</a>}{item?.downloaded != 1 && <span className="text-white">{t(item?.downloaded == 0 ? 'In Queue' : 'Failed')}</span>}</td>
                     </tr>)
                 )}
             </tbody>
