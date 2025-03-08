@@ -1,0 +1,51 @@
+version: "1.0.0"
+services:
+  alpine:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: subtitle/alpine:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  site:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile    
+    image: subtitle/nextjs:latest
+    ports:
+      - "3003:3000"
+    container_name: subtitle-nextjs
+
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile    
+    image: subtitle/api:latest
+    ports:
+      - "8083:8083"
+    container_name: subtitle-api
+    volumes:
+      - ./api/public/:/app/public
+    
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile    
+    image: subtitle/app:latest
+    ports:
+      - "180:80"
+      - "1443:443"
+    container_name: subtitle-app
+    volumes:
+      - ./app/tls:/app/tls
+      - ./app/.well-known:/app/.well-known
+
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

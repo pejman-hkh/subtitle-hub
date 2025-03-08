@@ -1,0 +1,101 @@
+basePath: /api/v1
+host: localhost:8083
+info:
+  contact:
+    email: pejman.hkh@gmail.com
+    name: Pejman Hkh
+    url: https://www.peji.ir
+  description: Subtitle api
+  title: Subtitle API
+  version: "1.0"
+paths:
+  /movie/{link}:
+    get:
+      consumes:
+      - application/json
+      description: Get movie details
+      parameters:
+      - description: Link
+        in: path
+        name: link
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Details movie
+      tags:
+      - movies
+  /movies:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all movies
+      parameters:
+      - description: Search
+        in: query
+        name: search
+        type: string
+      - description: Pagination
+        in: query
+        name: page
+        type: number
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: Year
+        in: query
+        name: year
+        type: number
+      - description: Imdb Code
+        in: query
+        name: imdb_code
+        type: string
+      - description: Type
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: List movies
+      tags:
+      - movies
+  /movies/detail:
+    get:
+      consumes:
+      - application/json
+      description: Get movie details
+      parameters:
+      - description: ID
+        in: query
+        name: id
+        type: integer
+      - description: IMDB Code
+        in: query
+        name: imdb
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Details movie
+      tags:
+      - movies
+  /movies/search:
+    get:
+      consumes:
+      - application/json
+      description: Search in movies
+      parameters:
+      - description: Search
+        in: query
+        name: q
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Search movies
+      tags:
+      - movies
+swagger: "2.0"
