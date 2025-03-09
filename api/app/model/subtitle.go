@@ -34,7 +34,16 @@ func (s *Subtitle) Sub(movie string, lang string, id string) (map[string]any, er
 func (s *Subtitle) DaemonDownloadSubs() {
 	path := "./public/subtitles/"
 	for {
+
 		subtitles := []Subtitle{}
+		gorn.DB.Where("downloaded = 2 and updated_at < NOW() - INTERVAL 5 MINUTE ").Limit(100).Find(&subtitles)
+		for _, subtitle := range subtitles {
+			subtitle.Downloaded = 0
+			subtitle.Error = ""
+			subtitle.Save(&subtitle)
+		}
+
+		subtitles = []Subtitle{}
 		gorn.DB.Where("downloaded = 0").Limit(100).Find(&subtitles)
 
 		for _, subtitle := range subtitles {
