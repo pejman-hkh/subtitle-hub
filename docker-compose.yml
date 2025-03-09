@@ -29,6 +29,7 @@ services:
     container_name: subtitle-api
     volumes:
       - ./api/public/:/app/public
+      - ./api/.env.production:/app/.env.production
     
     restart: unless-stopped
     extra_hosts:
