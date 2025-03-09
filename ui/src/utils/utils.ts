@@ -10,7 +10,7 @@ export function uniqid(prefix = "", random = false) {
 export async function currentUrl() {
     const headersList: any = await headers();
     let path = headersList.get("x-pathname") as string
-    path = path.replace(/(\/(fa|en))/g, "")
+    path = path.replace(/^(\/(fa|en))/g, "")
 
     //console.log('paaaaaaaaathhhhhhhhhhh', path)
     const searchParams = new URL(headersList.get("x-url"))?.searchParams.toString()
