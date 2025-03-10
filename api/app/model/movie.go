@@ -30,7 +30,7 @@ func (m *Movie) DaemonGetDetail() {
 			movie.Detailed = 1
 			movie.Save(&movie)
 
-			time.Sleep(1 * time.Second)
+			time.Sleep(2 * time.Second)
 		}
 		time.Sleep(2 * time.Second)
 	}
