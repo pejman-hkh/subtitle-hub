@@ -27,7 +27,7 @@ func Daemons() {
 // @contact.name   Pejman Hkh
 // @contact.url    https://www.peji.ir
 // @contact.email  pejman.hkh@gmail.com
-// @host      localhost:8083
+// @host
 // @BasePath  /api/v1
 func main() {
 	r := gin.Default()
