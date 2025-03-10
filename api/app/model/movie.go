@@ -77,7 +77,7 @@ func (m *Movie) Search(title string) ([]Movie, error) {
 		}
 
 		poster, ok := data["poster"].(string)
-		if ok {
+		if ok && movie.Poster == "" {
 			movie.Poster = poster
 		}
 
