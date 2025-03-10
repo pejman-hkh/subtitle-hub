@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f 
+RewriteRule ^index\.((s|p)?htm(l)?|php) / [L]
+RewriteRule "(.*)" "http://localhost:180/$1" [L,P,NE]
