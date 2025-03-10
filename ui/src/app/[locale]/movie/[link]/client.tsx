@@ -9,11 +9,17 @@ export function ClientMovie({ movie }: any) {
     const t = useTranslations()
     const langRef = useRef<HTMLSelectElement>(null)
     useEffect(() => {
-        if (langRef.current && localStorage.getItem('lang') != "") {
-            langRef.current.value = localStorage.getItem('lang') || ""
+        const value = localStorage.getItem('lang') || ""
+        if (langRef.current && value != "") {
+            const options = Array.from(langRef.current.options).map((option) => option.value)
 
-            const event = new Event('change', { 'bubbles': true });
-            langRef?.current.dispatchEvent(event);
+            if (options.includes(value)) {
+
+                langRef.current.value = value
+
+                const event = new Event('change', { 'bubbles': true });
+                langRef?.current.dispatchEvent(event);
+            }
         }
     }, [])
     return <>
