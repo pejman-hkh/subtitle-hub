@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"subtitle/gorn"
 	"subtitle/lib"
 	"time"
@@ -55,10 +56,17 @@ func (m *Movie) Search(title string) ([]Movie, error) {
 		}
 
 		movie := Movie{}
-		imdbCode, ok := data["imdb"].(string)
-		if !ok {
-			continue
+
+		imdbCode := ""
+
+		//fmt.Print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", title)
+
+		if strings.HasPrefix(title, "tt") {
+			imdbCode = title
+		} else {
+			imdbCode, _ = data["imdb"].(string)
 		}
+
 		gorn.DB.Where("imdb_code = ?", imdbCode).First(&movie)
 
 		movie.ImdbCode = imdbCode

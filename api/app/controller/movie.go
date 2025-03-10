@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"subtitle/app/model"
 	"subtitle/gorn"
 
@@ -87,6 +88,20 @@ func (s *MovieController) Detail(ctx *gin.Context) {
 		gorn.DB.Preload("Subtitles").Where("id = ?", ctx.Query("id")).First(&movie)
 	} else if ctx.Query("imdb") != "" {
 		gorn.DB.Preload("Subtitles").Where("imdb_code = ?", ctx.Query("imdb")).First(&movie)
+
+		if movie.ID == 0 {
+			search, err := movie.Search(ctx.Query("imdb"))
+
+			if err != nil {
+				s.FlashError(ctx, err.Error(), nil)
+				return
+			}
+
+			fmt.Print(search)
+
+			gorn.DB.Preload("Subtitles").Where("imdb_code = ?", ctx.Query("imdb")).First(&movie)
+
+		}
 	}
 
 	// detail, err := movie.Detail(ctx.Query("name"))
