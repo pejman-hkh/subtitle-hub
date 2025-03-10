@@ -47,7 +47,7 @@ export function ClientMovie({ movie }: any) {
             }} className="p-3 mb-4 text-black rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="all">{t('All Languages')}</option>
                 {langs?.map((item: any) => <option key={item} value={item}>{item}</option>)}
-            </select>
+            </select> {window && localStorage.getItem('lang')}
             <table className="space-y-3 w-full">
                 <tbody>
                     {subtitles?.map((item: any) => (
