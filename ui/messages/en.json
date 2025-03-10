@@ -1,4 +1,22 @@
 {
-  "lang": "en",
-  "dir": "ltr"
+  "dir": "ltr",
+  "Latest Movies": "Latest Movies",
+  "Home": "Home",
+  "Subtitle Hub": "Subtitle Hub",
+  "Next": "Next",
+  "Previous": "Previous",
+  "of": "of",
+  "Showing": "Showing",
+  "Search": "Search",
+  "Download": "Download",
+  "In Queue": "In Queue",
+  "Year": "Year",
+  "Download Subtitles": "Download Subtitles",
+  "All Languages": "All Languages",
+  "Download Free Subtitle": "Download Free Subtitle",
+  "Free Subtitle Api": "Free Subtitle Api",
+  "Download Subtitle": "Download Subtitle",
+  "Failed": "Failed",
+  "": "",
+  "t": ""
 }

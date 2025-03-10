@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 export const metadata: Metadata = {
   title: "Free Subtitle Api",
   description: "Free Subtitle Api",
+  keywords: "Download Subtitle,Download Free Subtitle"
 };
 
 export default async function RootLayout({
@@ -20,9 +21,6 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-      </head>
       <body dir={t('dir')}>
         {children}
       </body>
