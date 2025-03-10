@@ -1,13 +1,21 @@
 "use client"
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function ClientMovie({ movie }: any) {
 
     const langs = [...new Set(movie?.subtitles.map((item: any) => item.lang))];
     const [subtitles, setSubtitles] = useState<any>(movie?.subtitles)
     const t = useTranslations()
+    const langRef = useRef<HTMLSelectElement>(null)
+    useEffect(() => {
+        if (langRef.current && localStorage.getItem('lang') != "") {
+            langRef.current.value = localStorage.getItem('lang') || ""
 
+            var event = new Event('change', { 'bubbles': true });
+            langRef?.current.dispatchEvent(event);
+        }
+    }, [])
     return <>
         <div className="container mx-auto p-6" >
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
@@ -25,14 +33,19 @@ export function ClientMovie({ movie }: any) {
 
 
             <h3 className="text-3xl font-bold mb-3 text-indigo-400 mt-6">{t('Download Subtitles')}</h3>
-            <select onChange={(e) => {
-                if (e.currentTarget.value != "") {
+            <select ref={langRef} onChange={(e) => {
+                if (e.currentTarget.value != "all") {
                     setSubtitles(movie?.subtitles?.filter((item: any) => item?.lang == e.currentTarget.value))
                 } else {
                     setSubtitles(movie?.subtitles)
                 }
+
+                if (e.currentTarget.value) {
+                    localStorage.setItem('lang', e.currentTarget.value)
+                }
+
             }} className="p-3 mb-4 text-black rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">{t('All Languages')}</option>
+                <option value="all">{t('All Languages')}</option>
                 {langs?.map((item: any) => <option key={item} value={item}>{item}</option>)}
             </select>
             <table className="space-y-3 w-full">
