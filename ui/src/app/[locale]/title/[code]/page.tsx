@@ -1,5 +1,4 @@
 import api from "@/api/api"
-import { currentUrl } from "@/utils/utils"
 import { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { ClientMovie } from "../../movie/[link]/client"
