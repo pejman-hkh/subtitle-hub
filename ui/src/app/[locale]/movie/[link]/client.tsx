@@ -12,7 +12,7 @@ export function ClientMovie({ movie }: any) {
         if (langRef.current && localStorage.getItem('lang') != "") {
             langRef.current.value = localStorage.getItem('lang') || ""
 
-            var event = new Event('change', { 'bubbles': true });
+            const event = new Event('change', { 'bubbles': true });
             langRef?.current.dispatchEvent(event);
         }
     }, [])
