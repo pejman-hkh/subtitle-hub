@@ -61,30 +61,31 @@ func Cors() gin.HandlerFunc {
 	}
 }
 
-func main() {
+var static *gin.Engine
 
-	static := gin.New()
+func mainProxy(ctx *gin.Context) {
+	param := ctx.Param("site")
+	paramSplit := strings.Split(param, "/")
+
+	if paramSplit[1] == ".well-known" {
+		static.HandleContext(ctx)
+	} else if paramSplit[1] == "api" || paramSplit[1] == "docs" {
+		proxyToApi(ctx)
+	} else {
+		proxyToSite(ctx)
+	}
+}
+
+func main() {
+	static = gin.New()
 	static.Static("/.well-known/", "/app/.well-known/")
 
 	r := gin.Default()
 	r.Use(Cors())
-	r.Any("/*site", func(ctx *gin.Context) {
-		param := ctx.Param("site")
-		paramSplit := strings.Split(param, "/")
-
-		if paramSplit[1] == ".well-known" {
-			static.HandleContext(ctx)
-		} else if paramSplit[1] == "api" || paramSplit[1] == "docs" {
-			proxyToApi(ctx)
-		} else {
-			proxyToSite(ctx)
-		}
-	})
+	r.Any("/*site", mainProxy)
 
 	r1 := gin.Default()
-	r1.GET("/*path", func(c *gin.Context) {
-		c.Redirect(302, "https://"+c.Request.Host+c.Request.URL.Path)
-	})
+	r1.Any("/*site", mainProxy)
 
 	go r.RunTLS(":443", "/app/tls/localhost.crt", "/app/tls/localhost.key")
 	r1.Run(":80")
