@@ -4,6 +4,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import "./globals.css";
 import { Nav } from "@/components/nav";
+import { Wrapper } from "./wrapper";
 
 export default async function LocaleLayout({
     children,
@@ -23,7 +24,9 @@ export default async function LocaleLayout({
     const messages = await getMessages();
 
     return (<NextIntlClientProvider messages={messages} >
-        <Nav />
-        {children}
+        <Wrapper>
+            <Nav />
+            {children}
+        </Wrapper>
     </NextIntlClientProvider>);
 }

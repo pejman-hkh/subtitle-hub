@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-
 export const metadata: Metadata = {
   title: "Free Subtitle Api",
   description: "Free Subtitle Api",
@@ -17,11 +15,9 @@ export default async function RootLayout({
 
   const { locale } = await params;
 
-  const t = await getTranslations()
-
   return (
     <html lang={locale}>
-      <body dir={t('dir')}>
+      <body>
         {children}
       </body>
     </html>
