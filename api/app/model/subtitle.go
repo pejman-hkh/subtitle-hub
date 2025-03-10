@@ -36,7 +36,7 @@ func (s *Subtitle) DaemonDownloadSubs() {
 	for {
 
 		subtitles := []Subtitle{}
-		gorn.DB.Where("downloaded = 2 and updated_at < NOW() - INTERVAL 5 MINUTE ").Limit(100).Find(&subtitles)
+		gorn.DB.Where("downloaded = 2 and updated_at < NOW() - INTERVAL 120 MINUTE order by id desc").Limit(100).Find(&subtitles)
 		for _, subtitle := range subtitles {
 			subtitle.Downloaded = 0
 			subtitle.Error = ""
