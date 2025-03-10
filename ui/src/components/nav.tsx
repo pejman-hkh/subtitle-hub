@@ -49,7 +49,7 @@ export function Nav() {
         <div className="text-3xl font-extrabold"><Link href="/">🎬 {t('Subtitle Hub')}</Link></div>
         <ul className="flex space-x-6 text-lg">
             <li><Link href="/" className="hover:text-gray-300">{t('Home')}</Link></li>
-            <li><a href="/docs/index.html" className="hover:text-gray-300">{t('API')}</a></li>
+            <li><Link href="/docs/index.html" className="hover:text-gray-300">{t('API')}</Link></li>
 
         </ul>
         <div className="w-1/3">
