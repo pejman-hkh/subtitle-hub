@@ -32,6 +32,7 @@ export function ClientMovie({ movie }: any) {
                 <div className="md:col-span-2">
                     <h2 className="text-4xl font-extrabold mb-4 text-gray-500">{movie?.name} {movie?.year}</h2>
                     <p className="mb-2 text-gray-500 text-lg">{t("Year")}: {movie?.year}</p>
+                    <p className="mb-2 text-gray-500 text-lg">{t("Type")}: {movie?.type}</p>
                     <div className="flex items-center space-x-3 mt-2">
                         <a href={"https://www.imdb.com/title/" + movie?.imdb_code} className="text-blue-400 text-lg">🔗 IMDB</a>
                     </div>

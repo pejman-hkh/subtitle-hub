@@ -126,5 +126,9 @@ func (s *MovieController) DetailByLink(ctx *gin.Context) {
 	movie := model.Movie{}
 	gorn.DB.Preload("Subtitles").Where("link_name = ?", ctx.Param("link")).First(&movie)
 
+	if len(movie.Subtitles) == 0 && movie.Data == "" {
+		movie.Search(movie.ImdbCode)
+	}
+
 	s.FlashSuccess(ctx, "ok", map[string]any{"movie": movie})
 }
