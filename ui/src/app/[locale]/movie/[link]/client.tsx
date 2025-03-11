@@ -68,7 +68,7 @@ export function ClientMovie({ movie }: any) {
                                     const api = await clientApi('/subtitles/' + item?.id + '/download')
                                     if (api.status == 1) {
                                         (e.target as HTMLLinkElement).href = api?.data?.subtitle?.file_name
-
+                                        item.file_name = api?.data?.subtitle?.file_name
                                         // const event = new Event('click', { 'bubbles': true });
                                         // e.target.dispatchEvent(event);
 
