@@ -176,6 +176,31 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/subtitles/{id}/json": {
+            "get": {
+                "description": "Json Subtitle",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subtitles"
+                ],
+                "summary": "Json Subtitle",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
         }
     }
 }`

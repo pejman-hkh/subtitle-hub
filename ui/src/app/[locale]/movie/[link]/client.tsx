@@ -76,6 +76,8 @@ export function ClientMovie({ movie }: any) {
 
                                 }
                             }} href={process.env.NEXT_PUBLIC_BASE_URL + "files/subtitles/" + item?.file_name} className={(item?.file_name == "" ? "!text-red-500 " : "") + "text-indigo-400 hover:text-indigo-300"}>{t('Download')}</a>
+
+                                <a className={"ms-2 text-indigo-400 hover:text-indigo-300"} href={process.env.NEXT_PUBLIC_API_URL + "/subtitles/" + item?.id + "/json"}>{t("Json")}</a>
                             </td>
                         </tr>)
                     )}
