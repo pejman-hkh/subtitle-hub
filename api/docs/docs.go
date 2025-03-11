@@ -151,6 +151,31 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/subtitles/{id}/download": {
+            "get": {
+                "description": "Download Subtitle",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subtitles"
+                ],
+                "summary": "Download Subtitle",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
         }
     }
 }`

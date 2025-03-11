@@ -10,6 +10,7 @@ import (
 
 func Init(g *gin.RouterGroup) {
 	controller.InitMovie(g)
+	controller.InitSubtitle(g)
 }
 
 func Seeds() {

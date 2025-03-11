@@ -1,4 +1,5 @@
 "use client"
+import clientApi from "@/api/clientApi";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
@@ -60,10 +61,24 @@ export function ClientMovie({ movie }: any) {
                         <tr key={item?.id} className="bg-gray-800 p-4 rounded-lg shadow-md justify-between items-center hover:bg-gray-700 transition-colors border-b-1 border-white">
                             <td className="text-white text-lg p-4">{item?.title}</td>
                             <td className="p-4 text-white">{item?.lang}</td>
-                            <td className="p-4" width={'10%'}>{item?.file_name && <a href={process.env.NEXT_PUBLIC_BASE_URL + "files/subtitles/" + item?.file_name} className="text-indigo-400 hover:text-indigo-300">{t('Download')}</a>}{item?.downloaded != 1 && <span className="text-white">{t(item?.downloaded == 0 ? 'In Queue' : 'Failed')}</span>}</td>
+                            <td className="p-4" width={'10%'}><a onClick={async (e) => {
+                                if (item?.file_name == "") {
+                                    e.preventDefault()
+                                    const api = await clientApi('/subtitles/' + item?.id + '/download')
+                                    if (api.status == 1) {
+                                        (e.target as HTMLLinkElement).href = api?.data?.subtitle?.file_name
+
+                                        const event = new Event('click', { 'bubbles': true });
+                                        e.target.dispatchEvent(event);
+
+                                    }
+
+                                }
+                            }} href={process.env.NEXT_PUBLIC_BASE_URL + "files/subtitles/" + item?.file_name} className={(item?.file_name == "" ? "!text-red-500" : "") + "text-indigo-400 hover:text-indigo-300"}>{t('Download')}</a>
+                            </td>
                         </tr>)
                     )}
                 </tbody>
             </table>
-        </div></>
+        </div ></>
 }

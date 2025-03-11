@@ -97,4 +97,21 @@ paths:
       summary: Search movies
       tags:
       - movies
+  /subtitles/{id}/download:
+    get:
+      consumes:
+      - application/json
+      description: Download Subtitle
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Download Subtitle
+      tags:
+      - Subtitles
 swagger: "2.0"
