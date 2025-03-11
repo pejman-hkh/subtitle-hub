@@ -72,12 +72,14 @@ export function Nav() {
                     <option value="fa">Persian</option>
                 </select>
             </div>
-            <input onClick={() => setVisible(!visible)} ref={inputRef} onInput={debounce(searchHandler, 800)} type="text" placeholder={t('Search') + "..."} className="w-full p-2 text-white rounded-lg border-2 border-white focus:outline-none focus:ring-2 focus:ring-white" />
-            {visible && search?.length && <div className="flex"><div ref={searchRef} className={"overflow-y-auto h-[25rem] absolute bg-indigo-800 top-[4rem] p-4 z-10 text-white rounded-lg"}>
-                <ul>
-                    {search?.map((item: any) => <li className="flex flex-row gap-4 p-2 border-b-1 border-purple-200" key={item?.id}><img src={item?.poster} width={100} /><Link className="text-white" href={"/movie/" + item?.link_name}>{item?.name} {item?.year}</Link></li>)}
-                </ul>
-            </div></div>}
+            <div className="">
+                <input onClick={() => setVisible(!visible)} ref={inputRef} onInput={debounce(searchHandler, 800)} type="text" placeholder={t('Search') + "..."} className="w-full p-2 text-white rounded-lg border-2 border-white focus:outline-none focus:ring-2 focus:ring-white" />
+                {visible && search?.length && <div className="flex"><div ref={searchRef} className={"overflow-y-auto h-[25rem] absolute bg-indigo-800 top-[4rem] p-4 z-10 text-white rounded-lg"}>
+                    <ul>
+                        {search?.map((item: any) => <li className="flex flex-row gap-4 p-2 border-b-1 border-purple-200" key={item?.id}><img src={item?.poster} width={100} /><Link className="text-white" href={"/movie/" + item?.link_name}>{item?.name} {item?.year}</Link></li>)}
+                    </ul>
+                </div></div>}
+            </div>
         </div>
     </nav>
 }
