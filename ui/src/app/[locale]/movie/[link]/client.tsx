@@ -69,8 +69,8 @@ export function ClientMovie({ movie }: any) {
                                     if (api.status == 1) {
                                         (e.target as HTMLLinkElement).href = api?.data?.subtitle?.file_name
 
-                                        const event = new Event('click', { 'bubbles': true });
-                                        e.target.dispatchEvent(event);
+                                        // const event = new Event('click', { 'bubbles': true });
+                                        // e.target.dispatchEvent(event);
 
                                     }
 
