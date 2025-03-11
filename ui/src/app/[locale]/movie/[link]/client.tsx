@@ -74,7 +74,7 @@ export function ClientMovie({ movie }: any) {
                                     }
 
                                 }
-                            }} href={process.env.NEXT_PUBLIC_BASE_URL + "files/subtitles/" + item?.file_name} className={(item?.file_name == "" ? "!text-red-500" : "") + "text-indigo-400 hover:text-indigo-300"}>{t('Download')}</a>
+                            }} href={process.env.NEXT_PUBLIC_BASE_URL + "files/subtitles/" + item?.file_name} className={(item?.file_name == "" ? "!text-red-500 " : "") + "text-indigo-400 hover:text-indigo-300"}>{t('Download')}</a>
                             </td>
                         </tr>)
                     )}

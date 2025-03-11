@@ -2,6 +2,7 @@ package lib
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"mime"
@@ -42,7 +43,7 @@ func Request(method string, query map[string]string) (map[string]any, error) {
 	err = json.Unmarshal(body, &ret)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error() + " " + string(body))
 	}
 
 	return ret, nil
