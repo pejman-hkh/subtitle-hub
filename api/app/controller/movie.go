@@ -130,5 +130,11 @@ func (s *MovieController) DetailByLink(ctx *gin.Context) {
 		movie.Search(movie.ImdbCode)
 	}
 
+	if movie.Detailed == 0 {
+		movie.Detail(movie.LinkName)
+		movie.Detailed = 1
+		movie.Save(&movie)
+	}
+
 	s.FlashSuccess(ctx, "ok", map[string]any{"movie": movie})
 }
