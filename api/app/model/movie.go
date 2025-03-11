@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"strings"
 	"subtitle/gorn"
@@ -18,6 +19,7 @@ type Movie struct {
 	Type      string     `gorm:"index;size:50" json:"type"`
 	SubId     uint       `gorm:"index" json:"sub_id"`
 	Detailed  uint8      `gorm:"index" json:"detail"`
+	Data      string     `json:"data"`
 	Subtitles []Subtitle `gorm:"foreignKey:MovieId;" json:"subtitles"`
 }
 
@@ -68,6 +70,11 @@ func (m *Movie) Search(title string) ([]Movie, error) {
 		}
 
 		gorn.DB.Where("imdb_code = ?", imdbCode).First(&movie)
+
+		jsonData, err := json.Marshal(rawData)
+		if err == nil {
+			movie.Data = string(jsonData)
+		}
 
 		movie.ImdbCode = imdbCode
 
