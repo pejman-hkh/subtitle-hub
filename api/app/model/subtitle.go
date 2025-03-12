@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"subtitle/gorn"
@@ -65,6 +66,7 @@ func (subtitle *Subtitle) Download() (string, error) {
 
 func (s *Subtitle) DaemonDownloadSubs() {
 	for {
+		fmt.Print("in download looop\n")
 		subtitles := []Subtitle{}
 		gorn.DB.Where("downloaded = 2 and updated_at < NOW() - INTERVAL 120 MINUTE").Limit(100).Find(&subtitles)
 		for _, subtitle := range subtitles {
@@ -89,8 +91,10 @@ func (s *Subtitle) DaemonDownloadSubs() {
 				subtitle.Save(&subtitle)
 			}
 
+			fmt.Printf("in download loop loop %d\n", subtitle.ID)
 			time.Sleep(2 * time.Second)
 		}
 		time.Sleep(2 * time.Second)
+
 	}
 }
