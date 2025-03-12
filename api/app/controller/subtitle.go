@@ -91,6 +91,21 @@ func readZipFile(zipPath string) (map[string]string, error) {
 func (s *SubtitleController) Json(ctx *gin.Context) {
 	subtitle := model.Subtitle{}
 	gorn.DB.Where("id = ?", ctx.Param("id")).First(&subtitle)
+
+	filename, err := subtitle.Download()
+
+	if err != nil {
+		subtitle.Error = err.Error()
+		subtitle.Downloaded = 2
+		subtitle.Save(&subtitle)
+		s.FlashError(ctx, "failed", map[string]any{"err": err.Error()})
+		return
+	} else {
+		subtitle.FileName = filename
+		subtitle.Downloaded = 1
+		subtitle.Save(&subtitle)
+	}
+
 	path := "./public/subtitles/"
 
 	files, err := readZipFile(path + subtitle.FileName)
