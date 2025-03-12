@@ -82,10 +82,12 @@ func (s *Subtitle) DaemonDownloadSubs() {
 			filename, err := subtitle.Download()
 
 			if err != nil {
+				fmt.Println("err :", err.Error())
 				subtitle.Error = err.Error()
 				subtitle.Downloaded = 2
 				subtitle.Save(&subtitle)
 			} else {
+				fmt.Println("downloaded :", subtitle)
 				subtitle.FileName = filename
 				subtitle.Downloaded = 1
 				subtitle.Save(&subtitle)
