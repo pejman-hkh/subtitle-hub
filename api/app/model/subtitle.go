@@ -83,8 +83,13 @@ func (s *Subtitle) DaemonDownloadSubs() {
 
 			if err != nil {
 				fmt.Println("err :", err.Error())
+				if strings.Contains(err.Error(), "Not Found") {
+					subtitle.Downloaded = 3
+				} else {
+					subtitle.Downloaded = 2
+				}
+
 				subtitle.Error = err.Error()
-				subtitle.Downloaded = 2
 				subtitle.Save(&subtitle)
 			} else {
 				fmt.Println("downloaded :", subtitle)
@@ -93,7 +98,7 @@ func (s *Subtitle) DaemonDownloadSubs() {
 				subtitle.Save(&subtitle)
 			}
 
-			fmt.Printf("in download loop loop %d\n", subtitle.ID)
+			fmt.Printf("in download loop loop %d %d\n", subtitle.ID, subtitle.MovieId)
 			time.Sleep(2 * time.Second)
 		}
 		time.Sleep(2 * time.Second)
