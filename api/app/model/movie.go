@@ -29,7 +29,7 @@ func (m *Movie) DaemonGetDetail() {
 		gorn.DB.Where("detailed = 0").Limit(100).Find(&movies)
 
 		for _, movie := range movies {
-			movie.Detail(movie.LinkName)
+			movie.GetDetail(movie.LinkName)
 			movie.Detailed = 1
 			movie.Save(&movie)
 
@@ -115,7 +115,7 @@ func (m *Movie) Search(title string) ([]Movie, error) {
 	return movies, nil
 }
 
-func (m *Movie) Detail(name string) (map[string]any, error) {
+func (m *Movie) GetDetail(name string) (map[string]any, error) {
 	subtitle, err := lib.Request("getMovie", map[string]string{"movieName": name})
 
 	if err != nil {
@@ -197,6 +197,10 @@ func (m *Movie) Detail(name string) (map[string]any, error) {
 
 		lang, ok := data["lang"].(string)
 		if ok {
+			if lang != "English" && lang != "Farsi/Persian" {
+				continue
+			}
+
 			subtitle.Lang = lang
 		}
 

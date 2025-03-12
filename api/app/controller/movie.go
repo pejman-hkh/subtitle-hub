@@ -132,7 +132,7 @@ func (s *MovieController) DetailByLink(ctx *gin.Context) {
 
 	if movie.Detailed == 0 {
 		go func() {
-			movie.Detail(movie.LinkName)
+			movie.GetDetail(movie.LinkName)
 			movie.Detailed = 1
 			movie.Save(&movie)
 		}()

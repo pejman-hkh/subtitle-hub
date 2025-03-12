@@ -28,7 +28,7 @@ type Subtitle struct {
 	Downloaded uint8  `gorm:"index" json:"downloaded"`
 }
 
-func (s *Subtitle) Sub(movie string, lang string, id string) (map[string]any, error) {
+func (s *Subtitle) GetSub(movie string, lang string, id string) (map[string]any, error) {
 	return lib.Request("getSub", map[string]string{"movie": movie, "lang": lang, "id": id})
 }
 
@@ -37,7 +37,7 @@ func (subtitle *Subtitle) Download() (string, error) {
 
 	idStr := strconv.Itoa(int(subtitle.SubId))
 	langStr := strings.Replace(strings.Replace(strings.ToLower(subtitle.Lang), "/", "_", -1), " ", "_", -1)
-	detail, err := subtitle.Sub(subtitle.LinkName, langStr, idStr)
+	detail, err := subtitle.GetSub(subtitle.LinkName, langStr, idStr)
 	if err != nil {
 		return "", err
 	}
