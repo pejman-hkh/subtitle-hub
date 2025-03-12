@@ -36,7 +36,7 @@ func (subtitle *Subtitle) Download() (string, error) {
 	path := "./public/subtitles/"
 
 	idStr := strconv.Itoa(int(subtitle.SubId))
-	langStr := strings.Replace(strings.ToLower(subtitle.Lang), "/", "_", -1)
+	langStr := strings.Replace(strings.Replace(strings.ToLower(subtitle.Lang), "/", "_", -1), " ", "_", -1)
 	detail, err := subtitle.Sub(subtitle.LinkName, langStr, idStr)
 	if err != nil {
 		return "", err
