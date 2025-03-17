@@ -56,9 +56,10 @@ func (movie *Movie) GetSeasons() {
 				season := Season{}
 				season.MovieId = movie.ID
 				seasonNumber, ok := seasonData["number"].(float64)
-				if ok {
-					gorn.DB.Where("movie_id = ? and season = ? ", movie.ID, uint(seasonNumber)+1).First(&season)
-					season.Season = uint(seasonNumber) + 1
+				if ok && seasonNumber != 0 {
+					gorn.DB.Where("movie_id = ? and season = ? ", movie.ID, uint(seasonNumber)).First(&season)
+					season.Season = uint(seasonNumber)
+
 					season.Save(&season)
 				}
 			}
