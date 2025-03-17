@@ -8,6 +8,8 @@ import (
 	"subtitle/gorn"
 	"subtitle/lib"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Movie struct {
@@ -63,7 +65,9 @@ func (movie *Movie) GetSeasons() {
 		}
 	}
 
-	gorn.DB.Preload("Seasons").First(&movie)
+	gorn.DB.Preload("Seasons", func(db *gorm.DB) *gorm.DB {
+		return db.Order("season asc")
+	}).First(&movie)
 }
 
 func (m *Movie) Search(title string) ([]Movie, error) {
