@@ -2,10 +2,12 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 	"subtitle/app/model"
 	"subtitle/gorn"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type MovieController struct {
@@ -21,6 +23,7 @@ func (c *MovieController) InitRoutes(r *gin.RouterGroup) {
 
 	r.GET("", c.Index)
 	r.GET("/movie/:link", c.DetailByLink)
+	r.GET("/movie/:link/:season", c.Season)
 
 	g := r.Group("movies")
 
@@ -85,9 +88,9 @@ func (s *MovieController) SearchMovie(ctx *gin.Context) {
 func (s *MovieController) Detail(ctx *gin.Context) {
 	movie := model.Movie{}
 	if ctx.Query("id") != "" {
-		gorn.DB.Preload("Subtitles").Where("id = ?", ctx.Query("id")).First(&movie)
+		gorn.DB.Preload("Subtitles").Preload("Seasons").Where("id = ?", ctx.Query("id")).First(&movie)
 	} else if ctx.Query("imdb") != "" {
-		gorn.DB.Preload("Subtitles").Where("imdb_code = ?", ctx.Query("imdb")).First(&movie)
+		gorn.DB.Preload("Subtitles").Preload("Seasons").Where("imdb_code = ?", ctx.Query("imdb")).First(&movie)
 
 		if movie.ID == 0 {
 			search, err := movie.Search(ctx.Query("imdb"))
@@ -99,7 +102,7 @@ func (s *MovieController) Detail(ctx *gin.Context) {
 
 			fmt.Print(search)
 
-			gorn.DB.Preload("Subtitles").Where("imdb_code = ?", ctx.Query("imdb")).First(&movie)
+			gorn.DB.Preload("Subtitles").Preload("Seasons").Where("imdb_code = ?", ctx.Query("imdb")).First(&movie)
 
 		}
 	}
@@ -111,7 +114,46 @@ func (s *MovieController) Detail(ctx *gin.Context) {
 	// 	return
 	// }
 
+	movie.GetSeasons()
+
 	s.FlashSuccess(ctx, "ok", map[string]any{"movie": movie})
+}
+
+// Movies Season godoc
+// @Summary      Get Season
+// @Description  Get Season
+// @Tags         movies
+// @Param        link	path	string	true	"Link"
+// @Param        season	path	string	true	"Season"
+// @Accept       json
+// @Produce      json
+// @Router       /movie/{link}/{season} [get]
+func (s *MovieController) Season(ctx *gin.Context) {
+	movie := model.Movie{}
+	gorn.DB.Preload("Seasons", func(db *gorm.DB) *gorm.DB {
+		return db.Order("season asc")
+	}).Where("link_name = ?", ctx.Param("link")).First(&movie)
+
+	season := model.Season{}
+	seasonNumber := strings.Replace(ctx.Param("season"), "season-", "", -1)
+	fmt.Print(seasonNumber)
+
+	gorn.DB.Preload("Subtitles", func(db *gorm.DB) *gorm.DB {
+		return db.Where("season = ?", seasonNumber)
+	}).Where("movie_id = ? and season = ?", movie.ID, seasonNumber).First(&season)
+
+	if season.Detailed == 0 {
+		movie.GetDetail(movie.LinkName, ctx.Param("season"))
+		season.Detailed = 1
+		season.Save(&season)
+
+		gorn.DB.Preload("Subtitles", func(db *gorm.DB) *gorm.DB {
+			return db.Where("season = ?", seasonNumber)
+		}).First(&season)
+
+	}
+
+	s.FlashSuccess(ctx, "ok", map[string]any{"movie": movie, "season": season})
 }
 
 // DetailMovies godoc
@@ -124,7 +166,9 @@ func (s *MovieController) Detail(ctx *gin.Context) {
 // @Router       /movie/{link} [get]
 func (s *MovieController) DetailByLink(ctx *gin.Context) {
 	movie := model.Movie{}
-	gorn.DB.Preload("Subtitles").Where("link_name = ?", ctx.Param("link")).First(&movie)
+	gorn.DB.Preload("Subtitles").Preload("Seasons", func(db *gorm.DB) *gorm.DB {
+		return db.Order("season asc")
+	}).Where("link_name = ?", ctx.Param("link")).First(&movie)
 
 	if len(movie.Subtitles) == 0 && movie.Data == "" {
 		movie.Search(movie.ImdbCode)
@@ -132,13 +176,15 @@ func (s *MovieController) DetailByLink(ctx *gin.Context) {
 
 	if movie.Detailed == 0 {
 		go func() {
-			movie.GetDetail(movie.LinkName)
+			movie.GetDetail(movie.LinkName, "")
 			if movie.ID != 0 {
 				movie.Detailed = 1
 				movie.Save(&movie)
 			}
 		}()
 	}
+
+	movie.GetSeasons()
 
 	s.FlashSuccess(ctx, "ok", map[string]any{"movie": movie})
 }

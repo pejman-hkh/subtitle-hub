@@ -4,7 +4,6 @@ import (
 	"flag"
 	"subtitle/app"
 	"subtitle/app/middle"
-	"subtitle/app/model"
 	"subtitle/docs"
 	"subtitle/gorn"
 
@@ -14,10 +13,10 @@ import (
 )
 
 func Daemons() {
-	subtitle := model.Subtitle{}
-	movie := model.Movie{}
-	go subtitle.DaemonDownloadSubs()
-	go movie.DaemonGetDetail()
+	// subtitle := model.Subtitle{}
+	// movie := model.Movie{}
+	// go subtitle.DaemonDownloadSubs()
+	// go movie.DaemonGetDetail()
 
 }
 

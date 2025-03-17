@@ -44,6 +44,38 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/movie/{link}/{season}": {
+            "get": {
+                "description": "Get Season",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Get Season",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Link",
+                        "name": "link",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Season",
+                        "name": "season",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/movies": {
             "get": {
                 "description": "Get list of all movies",

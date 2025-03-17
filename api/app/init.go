@@ -20,4 +20,5 @@ func Seeds() {
 func Migrations() {
 	gorn.DB.AutoMigrate(model.Movie{})
 	gorn.DB.AutoMigrate(model.Subtitle{})
+	gorn.DB.AutoMigrate(model.Season{})
 }

@@ -13,6 +13,7 @@ import (
 type Subtitle struct {
 	BaseModel
 	MovieId    uint   `gorm:"index" json:"movie_id"`
+	Season     uint   `gorm:"index" json:"season"`
 	UserId     uint   `gorm:"index" json:"user_id"`
 	SubId      uint   `gorm:"index" json:"sub_id"`
 	Rate       string `gorm:"size:100" json:"rate"`

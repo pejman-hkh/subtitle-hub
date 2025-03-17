@@ -25,6 +25,28 @@ paths:
       summary: Details movie
       tags:
       - movies
+  /movie/{link}/{season}:
+    get:
+      consumes:
+      - application/json
+      description: Get Season
+      parameters:
+      - description: Link
+        in: path
+        name: link
+        required: true
+        type: string
+      - description: Season
+        in: path
+        name: season
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses: {}
+      summary: Get Season
+      tags:
+      - movies
   /movies:
     get:
       consumes:

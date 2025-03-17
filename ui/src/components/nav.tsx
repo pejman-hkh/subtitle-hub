@@ -72,7 +72,7 @@ export function Nav() {
                     <option value="fa">Persian</option>
                 </select>
             </div>
-            <div className="">
+            <div className="w-full">
                 <input onClick={() => setVisible(!visible)} ref={inputRef} onInput={debounce(searchHandler, 800)} type="text" placeholder={t('Search') + "..."} className="w-full p-2 text-white rounded-lg border-2 border-white focus:outline-none focus:ring-2 focus:ring-white" />
                 {visible && search?.length && <div className="flex"><div ref={searchRef} className={"overflow-y-auto h-[25rem] absolute bg-indigo-800 top-[4rem] p-4 z-10 text-white rounded-lg"}>
                     <ul>

@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"subtitle/gorn"
 	"subtitle/lib"
@@ -21,6 +22,7 @@ type Movie struct {
 	Detailed  uint8      `gorm:"index" json:"detail"`
 	Data      string     `json:"data"`
 	Subtitles []Subtitle `gorm:"foreignKey:MovieId;" json:"subtitles"`
+	Seasons   []Season   `gorm:"foreignKey:MovieId;" json:"seasons"`
 }
 
 func (m *Movie) DaemonGetDetail() {
@@ -29,7 +31,7 @@ func (m *Movie) DaemonGetDetail() {
 		gorn.DB.Where("detailed = 0").Limit(100).Find(&movies)
 
 		for _, movie := range movies {
-			movie.GetDetail(movie.LinkName)
+			movie.GetDetail(movie.LinkName, "")
 			movie.Detailed = 1
 			movie.Save(&movie)
 
@@ -37,6 +39,31 @@ func (m *Movie) DaemonGetDetail() {
 		}
 		time.Sleep(2 * time.Second)
 	}
+}
+
+func (movie *Movie) GetSeasons() {
+	data := make(map[string]any)
+	json.Unmarshal([]byte(movie.Data), &data)
+
+	seasons, ok := data["seasons"].([]any)
+	if ok {
+		//fmt.Print(seasons)
+		for _, rawSeason := range seasons {
+			seasonData, ok := rawSeason.(map[string]any)
+			if ok {
+				season := Season{}
+				season.MovieId = movie.ID
+				seasonNumber, ok := seasonData["number"].(float64)
+				if ok {
+					gorn.DB.Where("movie_id = ? and season = ? ", movie.ID, uint(seasonNumber)+1).First(&season)
+					season.Season = uint(seasonNumber) + 1
+					season.Save(&season)
+				}
+			}
+		}
+	}
+
+	gorn.DB.Preload("Seasons").First(&movie)
 }
 
 func (m *Movie) Search(title string) ([]Movie, error) {
@@ -115,56 +142,71 @@ func (m *Movie) Search(title string) ([]Movie, error) {
 	return movies, nil
 }
 
-func (m *Movie) GetDetail(name string) (map[string]any, error) {
-	subtitle, err := lib.Request("getMovie", map[string]string{"movieName": name})
+func (m *Movie) GetDetail(name string, season string) (map[string]any, error) {
+
+	param := make(map[string]string)
+	param["movieName"] = name
+	param["langs"] = "[]"
+	if season != "" {
+		param["season"] = season
+	}
+
+	subtitle, err := lib.Request("getMovie", param)
+
+	fmt.Print("aaaaaaaaaaaaaaa", param, subtitle)
 
 	if err != nil {
 		return nil, err
 	}
 
-	mv, ok := subtitle["movie"].(map[string]any)
+	movie := Movie{}
+	if season == "" {
 
-	if !ok {
-		return nil, errors.New("movie index not found")
+		mv, ok := subtitle["movie"].(map[string]any)
+
+		if !ok {
+			return nil, errors.New("movie index not found")
+		}
+
+		if m.ID == 0 {
+			imdbCode, ok := mv["imdbLink"].(string)
+			if ok {
+				gorn.DB.Where("imdb_code = ? ", imdbCode).First(&movie)
+			}
+
+			if movie.ID == 0 {
+				movie.ImdbCode = imdbCode
+				title, ok := mv["fullName"].(string)
+				if ok {
+					movie.Name = title
+				}
+
+				year, ok := mv["year"].(float64)
+				if ok {
+					movie.Year = uint(year)
+				}
+
+				poster, ok := mv["poster"].(string)
+				if ok {
+					movie.Poster = poster
+				}
+
+				typed, ok := mv["type"].(string)
+				if ok {
+					movie.Type = typed
+				}
+
+				subId, ok := mv["id"].(float64)
+				if ok {
+					movie.SubId = uint(subId)
+				}
+
+				movie.Save(&movie)
+			}
+		}
 	}
 
-	movie := Movie{}
-	if m.ID == 0 {
-		imdbCode, ok := mv["imdbLink"].(string)
-		if ok {
-			gorn.DB.Where("imdb_code = ? ", imdbCode).First(&movie)
-		}
-
-		if movie.ID == 0 {
-			movie.ImdbCode = imdbCode
-			title, ok := mv["fullName"].(string)
-			if ok {
-				movie.Name = title
-			}
-
-			year, ok := mv["year"].(float64)
-			if ok {
-				movie.Year = uint(year)
-			}
-
-			poster, ok := mv["poster"].(string)
-			if ok {
-				movie.Poster = poster
-			}
-
-			typed, ok := mv["type"].(string)
-			if ok {
-				movie.Type = typed
-			}
-
-			subId, ok := mv["id"].(float64)
-			if ok {
-				movie.SubId = uint(subId)
-			}
-
-			movie.Save(&movie)
-		}
-	} else {
+	if m.ID != 0 {
 		movie = *m
 	}
 
@@ -180,6 +222,11 @@ func (m *Movie) GetDetail(name string) (map[string]any, error) {
 		}
 
 		subtitle := Subtitle{}
+
+		if season != "" {
+			seasonNumber := gorn.Atoi(strings.Replace(season, "season-", "", -1))
+			subtitle.Season = uint(seasonNumber)
+		}
 
 		subtitle.MovieId = movie.ID
 
