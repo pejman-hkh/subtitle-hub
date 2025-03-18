@@ -18,6 +18,7 @@ export default function ClientIndex({ data }: any) {
                 </Link>
                 <div className="flex items-center space-x-3 mt-2">
                     <a target="_blank" href={"https://www.imdb.com/title/" + item?.imdb_code + "/"} className="text-blue-400 text-lg">🔗 IMDB</a>
+                    <div className="text-white">{item?.type}</div>
                 </div>
             </div>)}
 
